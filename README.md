@@ -1,1 +1,1 @@
-# kong-plugin-header-translater
+# kong-plugin-header-translator
