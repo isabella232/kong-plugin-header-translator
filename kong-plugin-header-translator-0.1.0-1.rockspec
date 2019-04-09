@@ -2,12 +2,12 @@ package = "kong-plugin-header-translator"
 version = "0.1.0-1"
 supported_platforms = {"linux", "macosx"}
 source = {
-  url = "git+https://github.com/emartech/kong-plugin-boilerplate.git",
+  url = "git+https://github.com/emartech/kong-plugin-header-translator.git",
   tag = "0.1.0"
 }
 description = {
-  summary = "Boilerplate for Kong API gateway plugins.",
-  homepage = "https://github.com/emartech/kong-plugin-boilerplate",
+  summary = "Translate the contents of a header into another header based on a custom dictionary.",
+  homepage = "https://github.com/emartech/kong-plugin-header-translator",
   license = "MIT"
 }
 dependencies = {
