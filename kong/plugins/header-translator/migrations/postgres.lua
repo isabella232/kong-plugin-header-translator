@@ -7,7 +7,7 @@ return {
                 input_header_value text,
                 output_header_name text,
                 output_header_value text,
-                PRIMARY KEY (input_header_name, input_header_value)
+                PRIMARY KEY (input_header_name, input_header_value, output_header_name)
               );
             ]],
         down = [[

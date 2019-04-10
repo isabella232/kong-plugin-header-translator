@@ -1,8 +1,5 @@
-local singletons = require "kong.singletons"
-local utils = require "kong.tools.utils"
-
 local SCHEMA = {
-    primary_key = { "input_header_name", "input_header_value" },
+    primary_key = { "input_header_name", "input_header_value", "output_header_name" },
     table = "header_translator_dictionary",
     cache_key = { "input_header_name", "input_header_value" },
     fields = {

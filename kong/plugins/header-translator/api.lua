@@ -1,8 +1,7 @@
 local crud = require "kong.api.crud_helpers"
-local utils = require "kong.tools.utils"
 
 return {
-    ["/header-dictionary/:input_header_name/translations/:input_header_value"] = {
+    ["/header-dictionary/:input_header_name/:input_header_value/translations/:output_header_name"] = {
         before = function(self)
             self.params.input_header_name = string.lower(self.params.input_header_name)
         end,
@@ -15,7 +14,8 @@ return {
         PUT = function(self, dao_factory, helpers)
             local translation, err = dao_factory.header_translations:find({
                 input_header_name = self.params.input_header_name,
-                input_header_value = self.params.input_header_value
+                input_header_value = self.params.input_header_value,
+                output_header_name = self.params.output_header_name
             })
 
             if err or not translation then
@@ -30,7 +30,8 @@ return {
         GET = function(self, dao_factory, helpers)
             local translation, err = dao_factory.header_translations:find({
                 input_header_name = self.params.input_header_name,
-                input_header_value = self.params.input_header_value
+                input_header_value = self.params.input_header_value,
+                output_header_name = self.params.output_header_name
             })
 
             if err or not translation then
