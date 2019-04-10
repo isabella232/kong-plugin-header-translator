@@ -21,7 +21,7 @@ describe("HeaderTranslator", function()
         helpers.db:truncate()
     end)
 
-    context("Config", function()
+    context("Admin API", function()
         local service
 
         before_each(function()
@@ -31,18 +31,64 @@ describe("HeaderTranslator", function()
             })
         end)
 
-        it("should respond proper error message when required config values not provided", function()
+        context("Plugin configuration", function()
+            it("should respond proper error message when required config values not provided", function()
+                local _, response = pcall(function()
+                    kong_sdk.plugins:create({
+                        service_id = service.id,
+                        name = "header-translator",
+                        config = {}
+                    })
+                end)
 
-            local _, response = pcall(function()
+                assert.are.equal("input_header_name is required", response.body["config.input_header_name"])
+                assert.are.equal("output_header_name is required", response.body["config.output_header_name"])
+            end)
+        end)
+
+        context("manipulating the dictionary", function()
+            before_each(function()
                 kong_sdk.plugins:create({
                     service_id = service.id,
                     name = "header-translator",
-                    config = {}
+                    config = {
+                        input_header_name = "X-Emarsys-Customer-Id",
+                        output_header_name = "X-Emarsys-Environment-Name"
+                    }
                 })
             end)
 
-            assert.are.equal("input_header is required", response.body["config.input_header"])
-            assert.are.equal("output_header is required", response.body["config.output_header"])
+            it("should respond with HTTP 201 when a new entry was created", function()
+                local creation_response = send_admin_request({
+                    method = "POST",
+                    path = "/header-dictionary/x-emarsys-customer-id/translations/112233",
+                    body = {
+                        output_header_name = "X-Emarsys-Environment-Name",
+                        output_header_value = "suitex.emar.sys"
+                    }
+                })
+
+                assert.are.equal(201, creation_response.status)
+                assert.are.same({
+                    input_header_name = "x-emarsys-customer-id",
+                    input_header_value = "112233",
+                    output_header_name = "X-Emarsys-Environment-Name",
+                    output_header_value = "suitex.emar.sys"
+                }, creation_response.body)
+
+                local retrieval_response = send_admin_request({
+                    method = "GET",
+                    path = "/header-dictionary/x-emarsys-customer-id/translations/112233"
+                })
+
+                assert.are.equal(200, retrieval_response.status)
+                assert.are.same({
+                    input_header_name = "x-emarsys-customer-id",
+                    input_header_value = "112233",
+                    output_header_name = "X-Emarsys-Environment-Name",
+                    output_header_value = "suitex.emar.sys"
+                }, retrieval_response.body)
+            end)
         end)
     end)
 
