@@ -3,6 +3,10 @@ local utils = require "kong.tools.utils"
 
 return {
     ["/header-dictionary/:input_header_name/translations/:input_header_value"] = {
+        before = function(self)
+            self.params.input_header_name = string.lower(self.params.input_header_name)
+        end,
+
         POST = function(self, dao_factory, helpers)
             crud.post(self.params, dao_factory.header_translations)
         end,
