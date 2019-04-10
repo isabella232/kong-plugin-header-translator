@@ -15,11 +15,11 @@ return {
         end,
 
         POST = function(self, dao_factory)
-            crud.post(self.params, dao_factory.header_translations)
+            crud.post(self.params, dao_factory.header_translator_dictionary)
         end,
 
         PUT = function(self, dao_factory, helpers)
-            local translation, err = dao_factory.header_translations:find({
+            local translation, err = dao_factory.header_translator_dictionary:find({
                 input_header_name = self.params.input_header_name,
                 input_header_value = self.params.input_header_value,
                 output_header_name = self.params.output_header_name
@@ -30,10 +30,10 @@ return {
             end
 
             if not translation then
-                crud.post(self.params, dao_factory.header_translations)
+                crud.post(self.params, dao_factory.header_translator_dictionary)
             else
                 if should_be_updated(translation, self.params) then
-                    crud.put(self.params, dao_factory.header_translations)
+                    crud.put(self.params, dao_factory.header_translator_dictionary)
                 else
                     helpers.responses.send_HTTP_OK(translation)
                 end
@@ -41,7 +41,7 @@ return {
         end,
 
         GET = function(self, dao_factory, helpers)
-            local translation, err = dao_factory.header_translations:find({
+            local translation, err = dao_factory.header_translator_dictionary:find({
                 input_header_name = self.params.input_header_name,
                 input_header_value = self.params.input_header_value,
                 output_header_name = self.params.output_header_name
@@ -55,7 +55,7 @@ return {
         end,
 
         DELETE = function(self, dao_factory)
-            crud.delete(self.params, dao_factory.header_translations)
+            crud.delete(self.params, dao_factory.header_translator_dictionary)
         end,
     }
 }

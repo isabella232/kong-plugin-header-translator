@@ -290,6 +290,7 @@ describe("HeaderTranslator", function()
                     }, retrieval_response.body)
                 end)
             end)
+
             context("DELETE /header-dictionary/:input_header_name/:input_header_value/translations/:output_header_name", function()
                 it("should delete entry if already exists", function()
                     send_admin_request({
@@ -311,4 +312,103 @@ describe("HeaderTranslator", function()
         end)
     end)
 
+    context("Plugin e2e", function()
+        local service
+
+        before_each(function()
+            service = kong_sdk.services:create({
+                name = "test-service",
+                url = "http://mockbin:8080/request"
+            })
+
+            kong_sdk.routes:create_for_service(service.id, "/")
+
+            kong_sdk.plugins:create({
+                service_id = service.id,
+                name = "header-translator",
+                config = {
+                    input_header_name = "X-Emarsys-Customer-Id",
+                    output_header_name = "X-Emarsys-Environment-Name"
+                }
+            })
+
+            send_admin_request({
+                method = "POST",
+                path = "/header-dictionary/x-emarsys-customer-id/112233/translations/x-emarsys-environment-name",
+                body = {
+                    output_header_value = "suitex.emar.sys"
+                }
+            })
+        end)
+
+        it("should set the output header if found", function()
+            local response = send_request({
+                method = "GET",
+                path = "/",
+                headers = {
+                    ["Host"] = "test1.com",
+                    ["X-Emarsys-Customer-Id"] = 112233,
+                }
+            })
+
+            assert.are.equal(200, response.status)
+            assert.are.equal("suitex.emar.sys", response.body.headers["x-emarsys-environment-name"])
+        end)
+
+        it("should not set the output header if not found", function()
+            local response = send_request({
+                method = "GET",
+                path = "/",
+                headers = {
+                    ["Host"] = "test1.com",
+                    ["X-Emarsys-Customer-Id"] = 556677,
+                }
+            })
+
+            assert.are.equal(200, response.status)
+            assert.is_nil(response.body.headers["x-emarsys-environment-name"])
+        end)
+
+        it("should not set the output header if no input header found", function()
+            local response = send_request({
+                method = "GET",
+                path = "/",
+                headers = {
+                    ["Host"] = "test1.com",
+                }
+            })
+
+            assert.are.equal(200, response.status)
+            assert.is_nil(response.body.headers["x-emarsys-environment-name"])
+        end)
+
+        context("when DB becomes unreachable", function()
+            it("should keep the translation in cache", function()
+
+                send_request({
+                    method = "GET",
+                    path = "/",
+                    headers = {
+                        ["Host"] = "test1.com",
+                        ["X-Emarsys-Customer-Id"] = 112233,
+                    }
+                })
+
+                helpers.dao.header_translator_dictionary:truncate()
+
+                local response = send_request({
+                    method = "GET",
+                    path = "/",
+                    headers = {
+                        ["Host"] = "test1.com",
+                        ["X-Emarsys-Customer-Id"] = 112233,
+                    }
+                })
+
+                assert.are.equal(200, response.status)
+                assert.are.equal("suitex.emar.sys", response.body.headers["x-emarsys-environment-name"])
+            end)
+        end)
+
+    end)
 end)
