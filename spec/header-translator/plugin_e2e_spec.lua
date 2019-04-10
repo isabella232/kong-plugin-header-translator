@@ -290,6 +290,24 @@ describe("HeaderTranslator", function()
                     }, retrieval_response.body)
                 end)
             end)
+            context("DELETE /header-dictionary/:input_header_name/:input_header_value/translations/:output_header_name", function()
+                it("should delete entry if already exists", function()
+                    send_admin_request({
+                        method = "POST",
+                        path = "/header-dictionary/x-emarsys-customer-id/112233/translations/x-emarsys-environment-name",
+                        body = {
+                            output_header_value = "suitex.emar.sys"
+                        }
+                    })
+
+                    local delete_response = send_admin_request({
+                        method = "DELETE",
+                        path = "/header-dictionary/x-emarsys-customer-id/112233/translations/x-emarsys-environment-name"
+                    })
+
+                    assert.are.equal(204, delete_response.status)
+                end)
+            end)
         end)
     end)
 
