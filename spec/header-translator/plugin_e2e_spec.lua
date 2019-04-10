@@ -58,68 +58,147 @@ describe("HeaderTranslator", function()
                 })
             end)
 
-            it("should save dictionary entries", function()
-                local creation_response = send_admin_request({
-                    method = "POST",
-                    path = "/header-dictionary/x-emarsys-customer-id/translations/112233",
-                    body = {
+            context("POST /header-dictionary/:input_header_name/translations/:input_header_value", function()
+                it("should save dictionary entries", function()
+                    local creation_response = send_admin_request({
+                        method = "POST",
+                        path = "/header-dictionary/x-emarsys-customer-id/translations/112233",
+                        body = {
+                            output_header_name = "x-emarsys-environment-name",
+                            output_header_value = "suitex.emar.sys"
+                        }
+                    })
+
+                    assert.are.equal(201, creation_response.status)
+                    assert.are.same({
+                        input_header_name = "x-emarsys-customer-id",
+                        input_header_value = "112233",
                         output_header_name = "x-emarsys-environment-name",
                         output_header_value = "suitex.emar.sys"
-                    }
-                })
+                    }, creation_response.body)
 
-                assert.are.equal(201, creation_response.status)
-                assert.are.same({
-                    input_header_name = "x-emarsys-customer-id",
-                    input_header_value = "112233",
-                    output_header_name = "x-emarsys-environment-name",
-                    output_header_value = "suitex.emar.sys"
-                }, creation_response.body)
+                    local retrieval_response = send_admin_request({
+                        method = "GET",
+                        path = "/header-dictionary/x-emarsys-customer-id/translations/112233"
+                    })
 
-                local retrieval_response = send_admin_request({
-                    method = "GET",
-                    path = "/header-dictionary/x-emarsys-customer-id/translations/112233"
-                })
+                    assert.are.equal(200, retrieval_response.status)
+                    assert.are.same({
+                        input_header_name = "x-emarsys-customer-id",
+                        input_header_value = "112233",
+                        output_header_name = "x-emarsys-environment-name",
+                        output_header_value = "suitex.emar.sys"
+                    }, retrieval_response.body)
+                end)
 
-                assert.are.equal(200, retrieval_response.status)
-                assert.are.same({
-                    input_header_name = "x-emarsys-customer-id",
-                    input_header_value = "112233",
-                    output_header_name = "x-emarsys-environment-name",
-                    output_header_value = "suitex.emar.sys"
-                }, retrieval_response.body)
+                it("should save header names in lower case", function()
+                    local creation_response = send_admin_request({
+                        method = "POST",
+                        path = "/header-dictionary/X-EmarSys-Customer-ID/translations/112233",
+                        body = {
+                            output_header_name = "X-Emarsys-Environment-Name",
+                            output_header_value = "suitex.emar.sys"
+                        }
+                    })
+
+                    assert.are.equal(201, creation_response.status)
+                    assert.are.same({
+                        input_header_name = "x-emarsys-customer-id",
+                        input_header_value = "112233",
+                        output_header_name = "x-emarsys-environment-name",
+                        output_header_value = "suitex.emar.sys"
+                    }, creation_response.body)
+
+                    local retrieval_response = send_admin_request({
+                        method = "GET",
+                        path = "/header-dictionary/x-emarsys-customer-id/translations/112233"
+                    })
+
+                    assert.are.equal(200, retrieval_response.status)
+                    assert.are.same({
+                        input_header_name = "x-emarsys-customer-id",
+                        input_header_value = "112233",
+                        output_header_name = "x-emarsys-environment-name",
+                        output_header_value = "suitex.emar.sys"
+                    }, retrieval_response.body)
+                end)
             end)
 
-            it("should save header names in lower case", function()
-                local creation_response = send_admin_request({
-                    method = "POST",
-                    path = "/header-dictionary/X-EmarSys-Customer-ID/translations/112233",
-                    body = {
-                        output_header_name = "X-Emarsys-Environment-Name",
+            context("PUT /header-dictionary/:input_header_name/translations/:input_header_value", function()
+                it("should create a new entry if it didn't exist before", function()
+                    local creation_response = send_admin_request({
+                        method = "PUT",
+                        path = "/header-dictionary/x-emarsys-customer-id/translations/112233",
+                        body = {
+                            output_header_name = "x-emarsys-environment-name",
+                            output_header_value = "suitex.emar.sys"
+                        }
+                    })
+
+                    assert.are.equal(201, creation_response.status)
+                    assert.are.same({
+                        input_header_name = "x-emarsys-customer-id",
+                        input_header_value = "112233",
+                        output_header_name = "x-emarsys-environment-name",
                         output_header_value = "suitex.emar.sys"
-                    }
-                })
+                    }, creation_response.body)
 
-                assert.are.equal(201, creation_response.status)
-                assert.are.same({
-                    input_header_name = "x-emarsys-customer-id",
-                    input_header_value = "112233",
-                    output_header_name = "x-emarsys-environment-name",
-                    output_header_value = "suitex.emar.sys"
-                }, creation_response.body)
+                    local retrieval_response = send_admin_request({
+                        method = "GET",
+                        path = "/header-dictionary/x-emarsys-customer-id/translations/112233"
+                    })
 
-                local retrieval_response = send_admin_request({
-                    method = "GET",
-                    path = "/header-dictionary/x-emarsys-customer-id/translations/112233"
-                })
+                    assert.are.equal(200, retrieval_response.status)
+                    assert.are.same({
+                        input_header_name = "x-emarsys-customer-id",
+                        input_header_value = "112233",
+                        output_header_name = "x-emarsys-environment-name",
+                        output_header_value = "suitex.emar.sys"
+                    }, retrieval_response.body)
+                end)
 
-                assert.are.equal(200, retrieval_response.status)
-                assert.are.same({
-                    input_header_name = "x-emarsys-customer-id",
-                    input_header_value = "112233",
-                    output_header_name = "x-emarsys-environment-name",
-                    output_header_value = "suitex.emar.sys"
-                }, retrieval_response.body)
+                it("should override the entry if it was there before", function()
+                    local creation_response = send_admin_request({
+                        method = "POST",
+                        path = "/header-dictionary/x-emarsys-customer-id/translations/112233",
+                        body = {
+                            output_header_name = "x-emarsys-environment-name",
+                            output_header_value = "suitex.emar.sys"
+                        }
+                    })
+
+                    assert.are.equal(201, creation_response.status)
+
+                    local override_response = send_admin_request({
+                        method = "PUT",
+                        path = "/header-dictionary/x-emarsys-customer-id/translations/112233",
+                        body = {
+                            output_header_name = "x-emarsys-environment-name",
+                            output_header_value = "suitey.emar.sys"
+                        }
+                    })
+
+                    assert.are.equal(200, override_response.status)
+                    assert.are.same({
+                        input_header_name = "x-emarsys-customer-id",
+                        input_header_value = "112233",
+                        output_header_name = "x-emarsys-environment-name",
+                        output_header_value = "suitey.emar.sys"
+                    }, override_response.body)
+
+                    local retrieval_response = send_admin_request({
+                        method = "GET",
+                        path = "/header-dictionary/x-emarsys-customer-id/translations/112233"
+                    })
+
+                    assert.are.equal(200, retrieval_response.status)
+                    assert.are.same({
+                        input_header_name = "x-emarsys-customer-id",
+                        input_header_value = "112233",
+                        output_header_name = "x-emarsys-environment-name",
+                        output_header_value = "suitey.emar.sys"
+                    }, retrieval_response.body)
+                end)
             end)
         end)
     end)
