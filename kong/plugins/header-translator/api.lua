@@ -8,6 +8,7 @@ return {
         end,
 
         POST = function(self, dao_factory, helpers)
+            self.params.output_header_name = string.lower(self.params.output_header_name)
             crud.post(self.params, dao_factory.header_translations)
         end,
 

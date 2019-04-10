@@ -63,7 +63,7 @@ describe("HeaderTranslator", function()
                     method = "POST",
                     path = "/header-dictionary/x-emarsys-customer-id/translations/112233",
                     body = {
-                        output_header_name = "X-Emarsys-Environment-Name",
+                        output_header_name = "x-emarsys-environment-name",
                         output_header_value = "suitex.emar.sys"
                     }
                 })
@@ -72,7 +72,7 @@ describe("HeaderTranslator", function()
                 assert.are.same({
                     input_header_name = "x-emarsys-customer-id",
                     input_header_value = "112233",
-                    output_header_name = "X-Emarsys-Environment-Name",
+                    output_header_name = "x-emarsys-environment-name",
                     output_header_value = "suitex.emar.sys"
                 }, creation_response.body)
 
@@ -85,12 +85,12 @@ describe("HeaderTranslator", function()
                 assert.are.same({
                     input_header_name = "x-emarsys-customer-id",
                     input_header_value = "112233",
-                    output_header_name = "X-Emarsys-Environment-Name",
+                    output_header_name = "x-emarsys-environment-name",
                     output_header_value = "suitex.emar.sys"
                 }, retrieval_response.body)
             end)
 
-            it("should save entries in lower case", function()
+            it("should save header names in lower case", function()
                 local creation_response = send_admin_request({
                     method = "POST",
                     path = "/header-dictionary/X-EmarSys-Customer-ID/translations/112233",
@@ -104,7 +104,7 @@ describe("HeaderTranslator", function()
                 assert.are.same({
                     input_header_name = "x-emarsys-customer-id",
                     input_header_value = "112233",
-                    output_header_name = "X-Emarsys-Environment-Name",
+                    output_header_name = "x-emarsys-environment-name",
                     output_header_value = "suitex.emar.sys"
                 }, creation_response.body)
 
@@ -117,7 +117,7 @@ describe("HeaderTranslator", function()
                 assert.are.same({
                     input_header_name = "x-emarsys-customer-id",
                     input_header_value = "112233",
-                    output_header_name = "X-Emarsys-Environment-Name",
+                    output_header_name = "x-emarsys-environment-name",
                     output_header_value = "suitex.emar.sys"
                 }, retrieval_response.body)
             end)
