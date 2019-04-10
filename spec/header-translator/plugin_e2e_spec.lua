@@ -248,6 +248,47 @@ describe("HeaderTranslator", function()
                         output_header_value = "malacpersely"
                     }, other_retrieval_response.body)
                 end)
+
+                it("should not create or update entry when no change detected", function()
+                    local creation_response = send_admin_request({
+                        method = "POST",
+                        path = "/header-dictionary/x-emarsys-customer-id/112233/translations/x-emarsys-environment-name",
+                        body = {
+                            output_header_value = "suitex.emar.sys"
+                        }
+                    })
+
+                    assert.are.equal(201, creation_response.status)
+
+                    local same_content_response = send_admin_request({
+                        method = "PUT",
+                        path = "/header-dictionary/x-emarsys-customer-id/112233/translations/x-emarsys-environment-name",
+                        body = {
+                            output_header_value = "suitex.emar.sys"
+                        }
+                    })
+
+                    assert.are.equal(200, same_content_response.status)
+                    assert.are.same({
+                        input_header_name = "x-emarsys-customer-id",
+                        input_header_value = "112233",
+                        output_header_name = "x-emarsys-environment-name",
+                        output_header_value = "suitex.emar.sys"
+                    }, same_content_response.body)
+
+                    local retrieval_response = send_admin_request({
+                        method = "GET",
+                        path = "/header-dictionary/x-emarsys-customer-id/112233/translations/x-emarsys-environment-name"
+                    })
+
+                    assert.are.equal(200, retrieval_response.status)
+                    assert.are.same({
+                        input_header_name = "x-emarsys-customer-id",
+                        input_header_value = "112233",
+                        output_header_name = "x-emarsys-environment-name",
+                        output_header_value = "suitex.emar.sys"
+                    }, retrieval_response.body)
+                end)
             end)
         end)
     end)

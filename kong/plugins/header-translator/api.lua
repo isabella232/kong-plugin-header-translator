@@ -1,5 +1,12 @@
 local crud = require "kong.api.crud_helpers"
 
+local function should_be_updated(translation, params)
+    return not (translation.input_header_name == params.input_header_name and
+           translation.input_header_value == params.input_header_value and
+           translation.output_header_name == params.output_header_name and
+           translation.output_header_value == params.output_header_value)
+end
+
 return {
     ["/header-dictionary/:input_header_name/:input_header_value/translations/:output_header_name"] = {
         before = function(self)
@@ -18,12 +25,20 @@ return {
                 output_header_name = self.params.output_header_name
             })
 
-            if err or not translation then
+            if err then
+                helpers.responses.HTTP_INTERNAL_SERVER_ERROR("Failed to find translation.")
+            end
+
+            if not translation then
                 self.params.output_header_name = string.lower(self.params.output_header_name)
                 crud.post(self.params, dao_factory.header_translations)
             else
-                self.params.output_header_name = string.lower(self.params.output_header_name)
-                crud.put(self.params, dao_factory.header_translations)
+                if should_be_updated(translation, self.params) then
+                    self.params.output_header_name = string.lower(self.params.output_header_name)
+                    crud.put(self.params, dao_factory.header_translations)
+                else
+                    helpers.responses.send_HTTP_OK(translation)
+                end
             end
         end,
 
