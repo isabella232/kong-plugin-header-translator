@@ -18,7 +18,9 @@ dependencies = {
 build = {
   type = "builtin",
   modules = {
-    ["kong.plugins.header-translator.handler"] = "kong/plugins/myplugin/handler.lua",
-    ["kong.plugins.header-translator.schema"] = "kong/plugins/myplugin/schema.lua",
+    ["kong.plugins.header-translator.handler"] = "kong/plugins/header-translator/handler.lua",
+    ["kong.plugins.header-translator.schema"] = "kong/plugins/header-translator/schema.lua",
+    ["kong.plugins.header-translator.daos"] = "kong/plugins/header-translator/daos.lua",
+    ["kong.plugins.header-translator.api"] = "kong/plugins/header-translator/api.lua",
   }
 }

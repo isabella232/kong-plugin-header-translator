@@ -31,7 +31,7 @@ test: ## Run tests
 dev-env: ## Creates a service (myservice) and attaches a plugin to it (header-translator)
 	bash -c "curl -i -X POST --url http://localhost:8001/services/ --data 'name=testapi' --data 'protocol=http' --data 'host=mockbin' --data 'path=/request'"
 	bash -c "curl -i -X POST --url http://localhost:8001/services/testapi/routes/ --data 'paths[]=/'"
-	bash -c "curl -i -X POST --url http://localhost:8001/services/testapi/plugins/ --data 'name=header-translator' --data 'config.input_header_name=x-valami' --data 'config.output_header_name=x-mas_header'"
+	bash -c "curl -i -X POST --url http://localhost:8001/services/testapi/plugins/ --data 'name=header-translator' --data 'config.input_header_name=x-valami' --data 'config.output_header_name=x-mas-header'"
 
 ping: ## Pings kong on localhost:8000
 	bash -c "curl -i http://localhost:8000"
