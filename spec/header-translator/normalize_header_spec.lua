@@ -1,4 +1,4 @@
-local normalizer = require "kong.plugins.header-translator.normalizer"
+local normalizer = require "kong.plugins.header-translator.normalize_header"
 
 describe("Normalizer", function()
     it("should lowercase the given input", function()
