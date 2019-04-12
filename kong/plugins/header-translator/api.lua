@@ -1,4 +1,5 @@
 local crud = require "kong.api.crud_helpers"
+local normalizer = require "kong.plugins.header-translator.normalizer"
 
 local function should_be_updated(translation, params)
     return not (translation.input_header_name == params.input_header_name and
@@ -10,8 +11,8 @@ end
 return {
     ["/header-dictionary/:input_header_name/:input_header_value/translations/:output_header_name"] = {
         before = function(self)
-            self.params.input_header_name = string.lower(self.params.input_header_name)
-            self.params.output_header_name = string.lower(self.params.output_header_name)
+            self.params.input_header_name = normalizer(self.params.input_header_name)
+            self.params.output_header_name = normalizer(self.params.output_header_name)
         end,
 
         POST = function(self, dao_factory)

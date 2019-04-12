@@ -70,9 +70,9 @@ describe("HeaderTranslator", function()
 
                     assert.are.equal(201, creation_response.status)
                     assert.are.same({
-                        input_header_name = "x-emarsys-customer-id",
+                        input_header_name = "x_emarsys_customer_id",
                         input_header_value = "112233",
-                        output_header_name = "x-emarsys-environment-name",
+                        output_header_name = "x_emarsys_environment_name",
                         output_header_value = "suitex.emar.sys"
                     }, creation_response.body)
 
@@ -83,9 +83,9 @@ describe("HeaderTranslator", function()
 
                     assert.are.equal(200, retrieval_response.status)
                     assert.are.same({
-                        input_header_name = "x-emarsys-customer-id",
+                        input_header_name = "x_emarsys_customer_id",
                         input_header_value = "112233",
-                        output_header_name = "x-emarsys-environment-name",
+                        output_header_name = "x_emarsys_environment_name",
                         output_header_value = "suitex.emar.sys"
                     }, retrieval_response.body)
                 end)
@@ -101,9 +101,9 @@ describe("HeaderTranslator", function()
 
                     assert.are.equal(201, creation_response.status)
                     assert.are.same({
-                        input_header_name = "x-emarsys-customer-id",
+                        input_header_name = "x_emarsys_customer_id",
                         input_header_value = "112233",
-                        output_header_name = "x-emarsys-environment-name",
+                        output_header_name = "x_emarsys_environment_name",
                         output_header_value = "suitex.emar.sys"
                     }, creation_response.body)
 
@@ -114,9 +114,9 @@ describe("HeaderTranslator", function()
 
                     assert.are.equal(200, retrieval_response.status)
                     assert.are.same({
-                        input_header_name = "x-emarsys-customer-id",
+                        input_header_name = "x_emarsys_customer_id",
                         input_header_value = "112233",
-                        output_header_name = "x-emarsys-environment-name",
+                        output_header_name = "x_emarsys_environment_name",
                         output_header_value = "suitex.emar.sys"
                     }, retrieval_response.body)
                 end)
@@ -134,9 +134,9 @@ describe("HeaderTranslator", function()
 
                     assert.are.equal(201, creation_response.status)
                     assert.are.same({
-                        input_header_name = "x-emarsys-customer-id",
+                        input_header_name = "x_emarsys_customer_id",
                         input_header_value = "112233",
-                        output_header_name = "x-emarsys-environment-name",
+                        output_header_name = "x_emarsys_environment_name",
                         output_header_value = "suitex.emar.sys"
                     }, creation_response.body)
 
@@ -147,9 +147,9 @@ describe("HeaderTranslator", function()
 
                     assert.are.equal(200, retrieval_response.status)
                     assert.are.same({
-                        input_header_name = "x-emarsys-customer-id",
+                        input_header_name = "x_emarsys_customer_id",
                         input_header_value = "112233",
-                        output_header_name = "x-emarsys-environment-name",
+                        output_header_name = "x_emarsys_environment_name",
                         output_header_value = "suitex.emar.sys"
                     }, retrieval_response.body)
                 end)
@@ -175,9 +175,9 @@ describe("HeaderTranslator", function()
 
                     assert.are.equal(200, override_response.status)
                     assert.are.same({
-                        input_header_name = "x-emarsys-customer-id",
+                        input_header_name = "x_emarsys_customer_id",
                         input_header_value = "112233",
-                        output_header_name = "x-emarsys-environment-name",
+                        output_header_name = "x_emarsys_environment_name",
                         output_header_value = "suitey.emar.sys"
                     }, override_response.body)
 
@@ -188,9 +188,9 @@ describe("HeaderTranslator", function()
 
                     assert.are.equal(200, retrieval_response.status)
                     assert.are.same({
-                        input_header_name = "x-emarsys-customer-id",
+                        input_header_name = "x_emarsys_customer_id",
                         input_header_value = "112233",
-                        output_header_name = "x-emarsys-environment-name",
+                        output_header_name = "x_emarsys_environment_name",
                         output_header_value = "suitey.emar.sys"
                     }, retrieval_response.body)
                 end)
@@ -216,9 +216,9 @@ describe("HeaderTranslator", function()
 
                     assert.are.equal(201, new_entry_response.status)
                     assert.are.same({
-                        input_header_name = "x-emarsys-customer-id",
+                        input_header_name = "x_emarsys_customer_id",
                         input_header_value = "112233",
-                        output_header_name = "x-emarsys-external-identifier",
+                        output_header_name = "x_emarsys_external_identifier",
                         output_header_value = "malacpersely"
                     }, new_entry_response.body)
 
@@ -229,9 +229,9 @@ describe("HeaderTranslator", function()
 
                     assert.are.equal(200, retrieval_response.status)
                     assert.are.same({
-                        input_header_name = "x-emarsys-customer-id",
+                        input_header_name = "x_emarsys_customer_id",
                         input_header_value = "112233",
-                        output_header_name = "x-emarsys-environment-name",
+                        output_header_name = "x_emarsys_environment_name",
                         output_header_value = "suitex.emar.sys"
                     }, retrieval_response.body)
 
@@ -242,9 +242,9 @@ describe("HeaderTranslator", function()
 
                     assert.are.equal(200, other_retrieval_response.status)
                     assert.are.same({
-                        input_header_name = "x-emarsys-customer-id",
+                        input_header_name = "x_emarsys_customer_id",
                         input_header_value = "112233",
-                        output_header_name = "x-emarsys-external-identifier",
+                        output_header_name = "x_emarsys_external_identifier",
                         output_header_value = "malacpersely"
                     }, other_retrieval_response.body)
                 end)
@@ -270,9 +270,9 @@ describe("HeaderTranslator", function()
 
                     assert.are.equal(200, same_content_response.status)
                     assert.are.same({
-                        input_header_name = "x-emarsys-customer-id",
+                        input_header_name = "x_emarsys_customer_id",
                         input_header_value = "112233",
-                        output_header_name = "x-emarsys-environment-name",
+                        output_header_name = "x_emarsys_environment_name",
                         output_header_value = "suitex.emar.sys"
                     }, same_content_response.body)
 
@@ -283,9 +283,9 @@ describe("HeaderTranslator", function()
 
                     assert.are.equal(200, retrieval_response.status)
                     assert.are.same({
-                        input_header_name = "x-emarsys-customer-id",
+                        input_header_name = "x_emarsys_customer_id",
                         input_header_value = "112233",
-                        output_header_name = "x-emarsys-environment-name",
+                        output_header_name = "x_emarsys_environment_name",
                         output_header_value = "suitex.emar.sys"
                     }, retrieval_response.body)
                 end)

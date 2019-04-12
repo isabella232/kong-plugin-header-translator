@@ -1,5 +1,6 @@
 local BasePlugin = require "kong.plugins.base_plugin"
 local singletons = require "kong.singletons"
+local normalizer = require "kong.plugins.header-translator.normalizer"
 local Logger = require "logger"
 
 local HeaderTranslatorHandler = BasePlugin:extend()
@@ -25,9 +26,9 @@ function HeaderTranslatorHandler:access(conf)
 
     if not headers[conf['input_header_name']] then return end
 
-    local input_header_name = string.lower(conf['input_header_name'])
+    local input_header_name = normalizer(conf['input_header_name'])
     local input_header_value = headers[conf['input_header_name']]
-    local output_header_name = string.lower(conf['output_header_name'])
+    local output_header_name = normalizer(conf['output_header_name'])
 
     local cache_key = singletons.dao.header_translator_dictionary:cache_key(input_header_name, input_header_value, output_header_name)
     local translation, err = singletons.cache:get(cache_key, nil, load_translation, input_header_name, input_header_value, output_header_name)
