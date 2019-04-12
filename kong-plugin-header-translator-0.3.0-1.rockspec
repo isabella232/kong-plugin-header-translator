@@ -1,9 +1,9 @@
 package = "kong-plugin-header-translator"
-version = "0.2.0-1"
+version = "0.3.0-1"
 supported_platforms = {"linux", "macosx"}
 source = {
   url = "git+https://github.com/emartech/kong-plugin-header-translator.git",
-  tag = "0.2.0"
+  tag = "0.3.0"
 }
 description = {
   summary = "Translate the contents of a header into another header based on a custom dictionary.",
@@ -22,6 +22,7 @@ build = {
     ["kong.plugins.header-translator.schema"] = "kong/plugins/header-translator/schema.lua",
     ["kong.plugins.header-translator.daos"] = "kong/plugins/header-translator/daos.lua",
     ["kong.plugins.header-translator.api"] = "kong/plugins/header-translator/api.lua",
+    ["kong.plugins.header-translator.normalizer"] = "kong/plugins/header-translator/normalizer.lua",
     ["kong.plugins.header-translator.migrations.postgres"] = "kong/plugins/header-translator/migrations/postgres.lua"
   }
 }
