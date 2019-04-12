@@ -5,7 +5,7 @@ local Logger = require "logger"
 
 local HeaderTranslatorHandler = BasePlugin:extend()
 
-HeaderTranslatorHandler.PRIORITY = 2000
+HeaderTranslatorHandler.PRIORITY = 900
 
 local function load_translation(input_header_name, input_header_value, output_header_name)
     return kong.dao.header_translator_dictionary:find({
