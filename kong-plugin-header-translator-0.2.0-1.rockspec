@@ -1,9 +1,9 @@
 package = "kong-plugin-header-translator"
-version = "0.1.1-1"
+version = "0.2.0-1"
 supported_platforms = {"linux", "macosx"}
 source = {
   url = "git+https://github.com/emartech/kong-plugin-header-translator.git",
-  tag = "0.1.1"
+  tag = "0.2.0"
 }
 description = {
   summary = "Translate the contents of a header into another header based on a custom dictionary.",
