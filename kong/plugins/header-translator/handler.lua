@@ -22,13 +22,12 @@ end
 function HeaderTranslatorHandler:access(conf)
     HeaderTranslatorHandler.super.access(self)
 
-    local headers = kong.request.get_headers()
+    local input_header_name = normalize_header(conf.input_header_name)
+    local input_header_value = kong.request.get_header(input_header_name)
 
-    if not headers[conf['input_header_name']] then return end
+    if not input_header_value then return end
 
-    local input_header_name = normalize_header(conf['input_header_name'])
-    local input_header_value = headers[conf['input_header_name']]
-    local output_header_name = normalize_header(conf['output_header_name'])
+    local output_header_name = normalize_header(conf.output_header_name)
 
     local cache_key = singletons.dao.header_translator_dictionary:cache_key(input_header_name, input_header_value, output_header_name)
     local translation, err = singletons.cache:get(cache_key, nil, load_translation, input_header_name, input_header_value, output_header_name)
@@ -38,7 +37,7 @@ function HeaderTranslatorHandler:access(conf)
     end
 
     if translation then
-        kong.service.request.set_header(conf['output_header_name'], translation.output_header_value)
+        kong.service.request.set_header(conf.output_header_name, translation.output_header_value)
     end
 end
 
