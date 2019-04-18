@@ -15,6 +15,12 @@ local function load_translation(input_header_name, input_header_value, output_he
     })
 end
 
+local function get_translation(input_header_name, input_header_value, output_header_name)
+    local cache_key = kong.dao.header_translator_dictionary:cache_key(input_header_name, input_header_value, output_header_name)
+
+    return singletons.cache:get(cache_key, nil, load_translation, input_header_name, input_header_value, output_header_name)
+end
+
 function HeaderTranslatorHandler:new()
     HeaderTranslatorHandler.super.new(self, "header-translator")
 end
@@ -28,9 +34,7 @@ function HeaderTranslatorHandler:access(conf)
     if not input_header_value then return end
 
     local output_header_name = normalize_header(conf.output_header_name)
-
-    local cache_key = singletons.dao.header_translator_dictionary:cache_key(input_header_name, input_header_value, output_header_name)
-    local translation, err = singletons.cache:get(cache_key, nil, load_translation, input_header_name, input_header_value, output_header_name)
+    local translation, err = get_translation(input_header_name, input_header_value, output_header_name)
 
     if err then
         Logger.getInstance(ngx):logError(err)
