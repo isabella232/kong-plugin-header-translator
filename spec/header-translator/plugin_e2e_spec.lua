@@ -6,7 +6,7 @@ describe("HeaderTranslator", function()
     local kong_sdk, send_request, send_admin_request
 
     setup(function()
-        helpers.start_kong({ custom_plugins = "header-translator" })
+        helpers.start_kong({ plugins = "header-translator" })
 
         kong_sdk = kong_client.create_kong_client()
         send_request = kong_client.create_request_sender(helpers.proxy_client())
@@ -27,6 +27,7 @@ describe("HeaderTranslator", function()
         before_each(function()
             service = kong_sdk.services:create({
                 name = "test-service",
+                id = "0a7f3795-bc92-43b5-aada-258113b7c4ed",
                 url = "http://mockbin:8080/request"
             })
         end)
@@ -35,21 +36,25 @@ describe("HeaderTranslator", function()
             it("should respond proper error message when required config values not provided", function()
                 local _, response = pcall(function()
                     kong_sdk.plugins:create({
-                        service_id = service.id,
+                        service = {
+                            id = service.id
+                        },
                         name = "header-translator",
                         config = {}
                     })
                 end)
 
-                assert.are.equal("input_header_name is required", response.body["config.input_header_name"])
-                assert.are.equal("output_header_name is required", response.body["config.output_header_name"])
+                assert.are.equal("required field missing", response.body.fields.config.input_header_name)
+                assert.are.equal("required field missing", response.body.fields.config.output_header_name)
             end)
         end)
 
         context("manipulating the dictionary", function()
             before_each(function()
                 kong_sdk.plugins:create({
-                    service_id = service.id,
+                    service = {
+                        id = service.id
+                    },
                     name = "header-translator",
                     config = {
                         input_header_name = "X-Emarsys-Customer-Id",
@@ -119,6 +124,34 @@ describe("HeaderTranslator", function()
                         output_header_name = "x_emarsys_environment_name",
                         output_header_value = "suitex.emar.sys"
                     }, retrieval_response.body)
+                end)
+
+                it("should return error when entry cant be inserted", function()
+                    local new_entry_response = send_admin_request({
+                        method = "POST",
+                        path = "/header-dictionary/x-emarsys-customer-id/112233/translations/x-emarsys-environment-name",
+                        body = {
+                            output_header_value = {}
+                        }
+                    })
+
+                    assert.are.equal(500, new_entry_response.status)
+                    assert.are.equal("Failed to insert resource", new_entry_response.body.message)
+                    assert.are.same({
+                        output_header_value = "expected a string"
+                    }, new_entry_response.body.details.fields)
+                end)
+            end)
+
+            context("GET /header-dictionary/:input_header_name/translations/:input_header_value", function()
+                it("should return error when the entry does not exist", function()
+                    local retrieval_response = send_admin_request({
+                        method = "GET",
+                        path = "/header-dictionary/x-emarsys-customer-id/112233/translations/x-emarsys-environment-name",
+                    })
+
+                    assert.are.equal(404, retrieval_response.status)
+                    assert.are.equal("Resource does not exist", retrieval_response.body.message)
                 end)
             end)
 
@@ -249,6 +282,32 @@ describe("HeaderTranslator", function()
                     }, other_retrieval_response.body)
                 end)
 
+                it("should return error when entry cant be updated", function()
+                    local creation_response = send_admin_request({
+                        method = "POST",
+                        path = "/header-dictionary/x-emarsys-customer-id/112233/translations/x-emarsys-environment-name",
+                        body = {
+                            output_header_value = "suitex.emar.sys"
+                        }
+                    })
+
+                    assert.are.equal(201, creation_response.status)
+
+                    local new_entry_response = send_admin_request({
+                        method = "PUT",
+                        path = "/header-dictionary/x-emarsys-customer-id/112233/translations/x-emarsys-environment-name",
+                        body = {
+                            output_header_value = {}
+                        }
+                    })
+
+                    assert.are.equal(500, new_entry_response.status)
+                    assert.are.equal("Failed to update resource", new_entry_response.body.message)
+                    assert.are.same({
+                        output_header_value = "expected a string"
+                    }, new_entry_response.body.details.fields)
+                end)
+
                 it("should not create or update entry when no change detected", function()
                     local creation_response = send_admin_request({
                         method = "POST",
@@ -318,13 +377,16 @@ describe("HeaderTranslator", function()
         before_each(function()
             service = kong_sdk.services:create({
                 name = "test-service",
+                id = "0a7f3795-bc92-43b5-aada-258113b7c4ee",
                 url = "http://mockbin:8080/request"
             })
 
             kong_sdk.routes:create_for_service(service.id, "/")
 
             kong_sdk.plugins:create({
-                service_id = service.id,
+                service = {
+                    id = service.id
+                },
                 name = "header-translator",
                 config = {
                     input_header_name = "X-Emarsys-Customer-Id",
@@ -394,7 +456,7 @@ describe("HeaderTranslator", function()
                     }
                 })
 
-                helpers.dao.header_translator_dictionary:truncate()
+                helpers.db.header_translator_dictionary:truncate()
 
                 local response = send_request({
                     method = "GET",

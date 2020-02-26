@@ -8,7 +8,7 @@ local HeaderTranslatorHandler = BasePlugin:extend()
 HeaderTranslatorHandler.PRIORITY = 900
 
 local function load_translation(input_header_name, input_header_value, output_header_name)
-    return kong.dao.header_translator_dictionary:find({
+    return kong.db.header_translator_dictionary:select_by_cache_key({
         input_header_name = input_header_name,
         input_header_value = input_header_value,
         output_header_name = output_header_name
@@ -16,7 +16,7 @@ local function load_translation(input_header_name, input_header_value, output_he
 end
 
 local function get_translation(input_header_name, input_header_value, output_header_name)
-    local cache_key = kong.dao.header_translator_dictionary:cache_key(input_header_name, input_header_value, output_header_name)
+    local cache_key = kong.db.header_translator_dictionary:cache_key(input_header_name, input_header_value, output_header_name)
 
     return singletons.cache:get(cache_key, nil, load_translation, input_header_name, input_header_value, output_header_name)
 end
