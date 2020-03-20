@@ -22,7 +22,6 @@ build = {
     ["kong.plugins.header-translator.schema"] = "kong/plugins/header-translator/schema.lua",
     ["kong.plugins.header-translator.daos"] = "kong/plugins/header-translator/daos.lua",
     ["kong.plugins.header-translator.api"] = "kong/plugins/header-translator/api.lua",
-    ["kong.plugins.header-translator.normalize_header"] = "kong/plugins/header-translator/normalize_header.lua",
-    ["kong.plugins.header-translator.migrations.postgres"] = "kong/plugins/header-translator/migrations/postgres.lua"
+    ["kong.plugins.header-translator.normalize_header"] = "kong/plugins/header-translator/normalize_header.lua"
   }
 }
