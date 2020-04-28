@@ -24,7 +24,7 @@ build = {
     ["kong.plugins.header-translator.api"] = "kong/plugins/header-translator/api.lua",
     ["kong.plugins.header-translator.normalize_header"] = "kong/plugins/header-translator/normalize_header.lua",
     ["kong.plugins.header-translator.migrations.000_base_header_translator"] = "kong/plugins/header-translator/migrations/000_base_header_translator.lua",
-    ["kong.plugins.header-translator.migrations.001_120_to_200"] = "kong/plugins/header-translator/migrations/001_120_to_200.lua",
+    ["kong.plugins.header-translator.migrations.001_040_to_100"] = "kong/plugins/header-translator/migrations/001_040_to_100.lua",
     ["kong.plugins.header-translator.migrations.init"] = "kong/plugins/header-translator/migrations/init.lua"
   }
 }
